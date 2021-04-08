@@ -15,20 +15,20 @@ namespace sokol
 				},
 				metal = .{
 				    device = App.metalGetDevice(),
-				    renderpass_descriptor_cb = (function void*())App.metalGetRenderpassDescriptor(),
-				    drawable_cb = (function void*())App.metalGetDrawable(),
+				    renderpass_descriptor_cb = => App.metalGetRenderpassDescriptor,
+				    drawable_cb = => App.metalGetDrawable,
 				},
 				d3d11 = .{
 				    device = App.d3d11GetDevice(),
 				    device_context = App.d3d11GetDeviceContext(),
-				    render_target_view_cb = (function void*())App.d3d11GetRenderTargetView(),
-				    depth_stencil_view_cb = (function void*())App.d3d11GetDepthStencilView(),
+				    render_target_view_cb = => App.d3d11GetRenderTargetView,
+				    depth_stencil_view_cb = => App.d3d11GetDepthStencilView,
 				},
 				wgpu = .{
 				    device = App.wgpuGetDevice(),
-				    render_view_cb = (function void*())App.wgpuGetRenderView(),
-				    resolve_view_cb = (function void*())App.wgpuGetResolveView(),
-				    depth_stencil_view_cb = (function void*())App.wgpuGetDepthStencilView()
+				    render_view_cb = =>App.wgpuGetRenderView,
+				    resolve_view_cb = =>App.wgpuGetResolveView,
+				    depth_stencil_view_cb = =>App.wgpuGetDepthStencilView
 				}
 			};
 			return r;
