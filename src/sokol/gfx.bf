@@ -919,9 +919,6 @@ namespace sokol
 		[LinkName("sg_reset_state_cache")]
 		public static extern void resetStateCache();
 
-		[LinkName("sg_install_trace_hooks")]
-		public static extern TraceHooks installTraceHooks(TraceHooks* trace_hooks);
-
 		[LinkName("sg_push_debug_group")]
 		public static extern void pushDebugGroup(char8* name);
 
