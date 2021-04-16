@@ -1,0 +1,7 @@
+FileVersion = 1
+Dependencies = {corlib = "*", sokol-beef = "*"}
+
+[Project]
+Name = "sokol-clear"
+TargetType = "BeefGUIApplication"
+StartupObject = "sokol_clear.Program"
