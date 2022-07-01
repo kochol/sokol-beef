@@ -7,12 +7,14 @@ namespace sokol
 	public static class Gfx
 	{
 		// helper function to convert "anything" to a Range struct
-		public static Range asRange<T>(T anytype)
+		public static Range asRange<T>(Span<T> span)
 		{
-			var r = Range();
-			r.ptr = Internal.UnsafeCastToPtr(anytype);
-			r.size = (uint)anytype.GetType().InstanceSize;
-			return r;
+			Range range = Range {
+				ptr = span.Ptr,
+				size = (uint32)(span.Length * strideof(T))
+			};
+
+			return range;
 		}
 
 
@@ -195,6 +197,7 @@ namespace sokol
 			public int32 max_image_size_array  = 0;
 			public int32 max_image_array_layers  = 0;
 			public int32 max_vertex_attrs  = 0;
+			public int32 gl_max_vertex_uniform_vectors  = 0;
 		}
 
 		public enum ResourceState : int32
@@ -345,7 +348,19 @@ namespace sokol
 			FLOAT2,
 			FLOAT3,
 			FLOAT4,
+			INT,
+			INT2,
+			INT3,
+			INT4,
 			MAT4,
+			NUM,
+		}
+
+		public enum UniformLayout : int32
+		{
+			DEFAULT,
+			NATIVE,
+			STD140,
 			NUM,
 		}
 
@@ -573,6 +588,7 @@ namespace sokol
 		public struct ShaderUniformBlockDesc
 		{
 			public uint size  = 0;
+			public UniformLayout layout = .DEFAULT;
 			public ShaderUniformDesc[16] uniforms = .();
 		}
 
@@ -891,6 +907,14 @@ namespace sokol
 		}
 
 		[CRepr]
+		public struct Allocator
+		{
+			public function void*(uint, void*) alloc = null;
+			public function void(void*, void*) free = null;
+			public void* user_data = null;
+		}
+
+		[CRepr]
 		public struct Desc
 		{
 			public uint32 _start_canary  = 0;
@@ -903,6 +927,7 @@ namespace sokol
 			public int32 uniform_buffer_size  = 0;
 			public int32 staging_buffer_size  = 0;
 			public int32 sampler_cache_size  = 0;
+			public Allocator allocator = .();
 			public ContextDesc context = .();
 			public uint32 _end_canary  = 0;
 		}

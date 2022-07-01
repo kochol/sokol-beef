@@ -9,6 +9,7 @@ namespace sokol
 		public const int max_touchpoints = 8;
 		public const int max_mousebuttons = 3;
 		public const int max_keycodes = 512;
+		public const int max_iconimages = 8;
 
 		public enum EventType : int32
 		{
@@ -29,6 +30,8 @@ namespace sokol
 			RESIZED,
 			ICONIFIED,
 			RESTORED,
+			FOCUSED,
+			UNFOCUSED,
 			SUSPENDED,
 			RESUMED,
 			UPDATE_CURSOR,
@@ -183,6 +186,9 @@ namespace sokol
 		public const int modifier_ctrl = 2;
 		public const int modifier_alt = 4;
 		public const int modifier_super = 8;
+		public const int modifier_lmb = 256;
+		public const int modifier_rmb = 512;
+		public const int modifier_mmb = 1024;
 
 		[CRepr]
 		public struct Event
@@ -206,6 +212,36 @@ namespace sokol
 			public int32 window_height  = 0;
 			public int32 framebuffer_width  = 0;
 			public int32 framebuffer_height  = 0;
+		}
+
+		[CRepr]
+		public struct Range
+		{
+			public void* ptr = null;
+			public uint size  = 0;
+		}
+
+		[CRepr]
+		public struct ImageDesc
+		{
+			public int32 width  = 0;
+			public int32 height  = 0;
+			public Range pixels = .();
+		}
+
+		[CRepr]
+		public struct IconDesc
+		{
+			public bool sokol_default  = false;
+			public ImageDesc[8] images = .();
+		}
+
+		[CRepr]
+		public struct Allocator
+		{
+			public function void*(uint, void*) alloc = null;
+			public function void(void*, void*) free = null;
+			public void* user_data = null;
 		}
 
 		[CRepr]
@@ -236,7 +272,11 @@ namespace sokol
 			public bool enable_dragndrop  = false;
 			public int32 max_dropped_files  = 0;
 			public int32 max_dropped_file_path_length  = 0;
+			public IconDesc icon = .();
+			public Allocator allocator = .();
 			public bool gl_force_gles2  = false;
+			public int32 gl_major_version  = 0;
+			public int32 gl_minor_version  = 0;
 			public bool win32_console_utf8  = false;
 			public bool win32_console_create  = false;
 			public bool win32_console_attach  = false;
@@ -352,6 +392,9 @@ namespace sokol
 		[LinkName("sapp_frame_count")]
 		public static extern uint64 frameCount();
 
+		[LinkName("sapp_frame_duration")]
+		public static extern double frameDuration();
+
 		[LinkName("sapp_set_clipboard_string")]
 		public static extern void setClipboardString(char8* str);
 
@@ -360,6 +403,9 @@ namespace sokol
 
 		[LinkName("sapp_set_window_title")]
 		public static extern void setWindowTitle(char8* str);
+
+		[LinkName("sapp_set_icon")]
+		public static extern void setIcon(IconDesc* icon_desc);
 
 		[LinkName("sapp_get_num_dropped_files")]
 		public static extern int32 getNumDroppedFiles();
@@ -402,6 +448,9 @@ namespace sokol
 
 		[LinkName("sapp_d3d11_get_device_context")]
 		public static extern void* d3d11GetDeviceContext();
+
+		[LinkName("sapp_d3d11_get_swap_chain")]
+		public static extern void* d3d11GetSwapChain();
 
 		[LinkName("sapp_d3d11_get_render_target_view")]
 		public static extern void* d3d11GetRenderTargetView();

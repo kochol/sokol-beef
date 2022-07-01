@@ -7,12 +7,14 @@ namespace sokol
 	public static class Debugtext
 	{
 		// helper function to convert "anything" to a Range struct
-		public static Range asRange<T>(T anytype)
+		public static Range asRange<T>(Span<T> span)
 		{
-			var r = Range();
-			r.ptr = Internal.UnsafeCastToPtr(anytype);
-			r.size = (uint)anytype.GetType().InstanceSize;
-			return r;
+			Range range = Range {
+				ptr = span.Ptr,
+				size = (uint32)(span.Length * strideof(T))
+			};
+
+			return range;
 		}
 
 
@@ -50,12 +52,21 @@ namespace sokol
 		}
 
 		[CRepr]
+		public struct Allocator
+		{
+			public function void*(uint, void*) alloc = null;
+			public function void(void*, void*) free = null;
+			public void* user_data = null;
+		}
+
+		[CRepr]
 		public struct Desc
 		{
 			public int32 context_pool_size  = 0;
 			public int32 printf_buf_size  = 0;
 			public FontDesc[8] fonts = .();
 			public ContextDesc context = .();
+			public Allocator allocator = .();
 		}
 
 		[LinkName("sdtx_setup")]
@@ -93,6 +104,9 @@ namespace sokol
 
 		[LinkName("sdtx_get_context")]
 		public static extern Context getContext();
+
+		[LinkName("sdtx_default_context")]
+		public static extern Context defaultContext();
 
 		[LinkName("sdtx_draw")]
 		public static extern void draw();

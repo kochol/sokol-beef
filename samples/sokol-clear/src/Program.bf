@@ -10,14 +10,14 @@ namespace sokol_clear
 
 		static void OnInit()
 		{
-			_desc.context = Glue.context();
+			_desc.context = Glue.sgcontext();
 			Gfx.setup(&_desc);
 			_pass.colors[0] = .{ action = .CLEAR, value = .{ r=1, g=1, b=0, a=1 } };
 		}
 
 		static void OnFrame()
 		{
-			let g = _pass.colors[0].value.g + 0.01f;
+			let g = _pass.colors[0].value.g + 0.0001f;
 			_pass.colors[0].value.g = g > 1.0f ? 0.0f : g;
 			Gfx.beginDefaultPass(&_pass, App.width(), App.height());
 			Gfx.endPass();

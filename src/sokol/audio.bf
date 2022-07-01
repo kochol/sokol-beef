@@ -8,6 +8,14 @@ namespace sokol
 	{
 
 		[CRepr]
+		public struct Allocator
+		{
+			public function void*(uint, void*) alloc = null;
+			public function void(void*, void*) free = null;
+			public void* user_data = null;
+		}
+
+		[CRepr]
 		public struct Desc
 		{
 			public int32 sample_rate  = 0;
@@ -18,6 +26,7 @@ namespace sokol
 			public function void(float*, int32, int32) stream_cb = null;
 			public function void(float*, int32, int32, void*) stream_userdata_cb = null;
 			public void* user_data = null;
+			public Allocator allocator = .();
 		}
 
 		[LinkName("saudio_setup")]
@@ -43,6 +52,9 @@ namespace sokol
 
 		[LinkName("saudio_channels")]
 		public static extern int32 channels();
+
+		[LinkName("saudio_suspended")]
+		public static extern bool suspended();
 
 		[LinkName("saudio_expect")]
 		public static extern int32 expect();

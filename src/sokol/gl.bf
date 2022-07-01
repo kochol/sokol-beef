@@ -13,6 +13,12 @@ namespace sokol
 			public uint32 id  = 0;
 		}
 
+		[CRepr]
+		public struct Context
+		{
+			public uint32 id  = 0;
+		}
+
 		public enum Error : int32
 		{
 			ERROR = 0,
@@ -21,6 +27,25 @@ namespace sokol
 			COMMANDS_FULL,
 			STACK_OVERFLOW,
 			STACK_UNDERFLOW,
+			NO_CONTEXT,
+		}
+
+		[CRepr]
+		public struct ContextDesc
+		{
+			public int32 max_vertices  = 0;
+			public int32 max_commands  = 0;
+			public Gfx.PixelFormat color_format = .DEFAULT;
+			public Gfx.PixelFormat depth_format = .DEFAULT;
+			public int32 sample_count  = 0;
+		}
+
+		[CRepr]
+		public struct Allocator
+		{
+			public function void*(uint, void*) alloc = null;
+			public function void(void*, void*) free = null;
+			public void* user_data = null;
 		}
 
 		[CRepr]
@@ -28,11 +53,13 @@ namespace sokol
 		{
 			public int32 max_vertices  = 0;
 			public int32 max_commands  = 0;
+			public int32 context_pool_size  = 0;
 			public int32 pipeline_pool_size  = 0;
 			public Gfx.PixelFormat color_format = .DEFAULT;
 			public Gfx.PixelFormat depth_format = .DEFAULT;
 			public int32 sample_count  = 0;
 			public Gfx.FaceWinding face_winding = .DEFAULT;
+			public Allocator allocator = .();
 		}
 
 		[LinkName("sgl_setup")]
@@ -41,23 +68,44 @@ namespace sokol
 		[LinkName("sgl_shutdown")]
 		public static extern void shutdown();
 
-		[LinkName("sgl_error")]
-		public static extern Error getError();
-
-		[LinkName("sgl_defaults")]
-		public static extern void defaults();
-
 		[LinkName("sgl_rad")]
 		public static extern float asRadians(float deg);
 
 		[LinkName("sgl_deg")]
 		public static extern float asDegrees(float rad);
 
+		[LinkName("sgl_error")]
+		public static extern Error getError();
+
+		[LinkName("sgl_context_error")]
+		public static extern Error contextError(Context ctx);
+
+		[LinkName("sgl_make_context")]
+		public static extern Context makeContext(ContextDesc* desc);
+
+		[LinkName("sgl_destroy_context")]
+		public static extern void destroyContext(Context ctx);
+
+		[LinkName("sgl_set_context")]
+		public static extern void setContext(Context ctx);
+
+		[LinkName("sgl_get_context")]
+		public static extern Context getContext();
+
+		[LinkName("sgl_default_context")]
+		public static extern Context defaultContext();
+
 		[LinkName("sgl_make_pipeline")]
 		public static extern Pipeline makePipeline(Gfx.PipelineDesc* desc);
 
+		[LinkName("sgl_context_make_pipeline")]
+		public static extern Pipeline contextMakePipeline(Context ctx, Gfx.PipelineDesc* desc);
+
 		[LinkName("sgl_destroy_pipeline")]
 		public static extern void destroyPipeline(Pipeline pip);
+
+		[LinkName("sgl_defaults")]
+		public static extern void defaults();
 
 		[LinkName("sgl_viewport")]
 		public static extern void viewport(int32 x, int32 y, int32 w, int32 h, bool origin_top_left);
@@ -80,8 +128,8 @@ namespace sokol
 		[LinkName("sgl_texture")]
 		public static extern void texture(Gfx.Image img);
 
-		[LinkName("sgl_default_pipeline")]
-		public static extern void defaultPipeline();
+		[LinkName("sgl_load_default_pipeline")]
+		public static extern void loadDefaultPipeline();
 
 		[LinkName("sgl_load_pipeline")]
 		public static extern void loadPipeline(Pipeline pip);
@@ -160,6 +208,9 @@ namespace sokol
 
 		[LinkName("sgl_c1i")]
 		public static extern void c1i(uint32 rgba);
+
+		[LinkName("sgl_point_size")]
+		public static extern void pointSize(float s);
 
 		[LinkName("sgl_begin_points")]
 		public static extern void beginPoints();
@@ -256,5 +307,8 @@ namespace sokol
 
 		[LinkName("sgl_draw")]
 		public static extern void draw();
+
+		[LinkName("sgl_context_draw")]
+		public static extern void contextDraw(Context ctx);
 	}
 }

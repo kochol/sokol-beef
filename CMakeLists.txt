@@ -18,6 +18,7 @@ set(SOKOL_HEADERS
     src/sokol/c/sokol_defines.h
     src/sokol/c/sokol_gfx.h
     src/sokol/c/sokol_gl.h
+    src/sokol/c/sokol_glue.h
     src/sokol/c/sokol_shape.h
     src/sokol/c/sokol_time.h)
 add_definitions(-DIMPL)
@@ -35,6 +36,7 @@ else()
         src/sokol/c/sokol_debugtext.c
         src/sokol/c/sokol_gfx.c
         src/sokol/c/sokol_gl.c
+        src/sokol/c/sokol_glue.c
         src/sokol/c/sokol_shape.c
         src/sokol/c/sokol_time.c)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")

@@ -7,12 +7,14 @@ namespace sokol
 	public static class Shape
 	{
 		// helper function to convert "anything" to a Range struct
-		public static Range asRange<T>(T anytype)
+		public static Range asRange<T>(Span<T> span)
 		{
-			var r = Range();
-			r.ptr = Internal.UnsafeCastToPtr(anytype);
-			r.size = (uint)anytype.GetType().InstanceSize;
-			return r;
+			Range range = Range {
+				ptr = span.Ptr,
+				size = (uint32)(span.Length * strideof(T))
+			};
+
+			return range;
 		}
 
 
