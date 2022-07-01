@@ -1,11 +1,5 @@
 FileVersion = 1
-Projects = {sokol-clear = {Path = "sokol-clear"}, sokol-beef = {Path = ".."}}
+Projects = {sokol-clear = {Path = "sokol-clear"}, sokol-beef = {Path = ".."}, sokol-triangle = {Path = "sokol-triangle"}}
 
 [Workspace]
-StartupProject = "sokol-clear"
-
-[Configs.Test.Win32]
-ConfigSelections = {corlib = {Config = "Debug"}}
-
-[Configs.Test.Win64]
-ConfigSelections = {corlib = {Config = "Debug"}}
+StartupProject = "sokol-triangle"

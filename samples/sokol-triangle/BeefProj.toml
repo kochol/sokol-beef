@@ -1,0 +1,7 @@
+FileVersion = 1
+Dependencies = {corlib = "*", sokol-beef = "*"}
+
+[Project]
+Name = "sokol-triangle"
+TargetType = "BeefGUIApplication"
+StartupObject = "sokol_triangle.Program"
